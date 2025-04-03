@@ -65,7 +65,7 @@ dict_plotly = {'Ensemble ! (Majorité présidentielle)': 'rgb(114, 9, 183)',
 def map_results(data_source: pd.DataFrame):
     
     customdata = [
-        "election",
+        "election_clean",
         "adresse_bv",
         "inscrits",
         "perc_abstentions",
@@ -81,92 +81,47 @@ def map_results(data_source: pd.DataFrame):
         lat="latitude",
         lon="longitude",
         color="Libellé",
-        animation_frame="election",
         mapbox_style="open-street-map",
-        zoom=4,
-        center={"lat": 48.8566, "lon": 2.3522},
         size="size",
         size_max=3,
-        # color_discrete_map=dict_plotly,
+        color_discrete_map=dict_plotly,
         width=1400,
         height=1000,
-        # custom_data=customdata
+        custom_data=customdata
     )
 
-    # fig.update_traces(hovertemplate="<b>ID Bureau de vote :</b> %{customdata[8]}<br>"+
-    #     "<b>Election :</b> %{customdata[0]}<br>"+
-    #     "<b>Bureau de vote :</b> %{customdata[1]}<br>"+
-    #     "<b>Nb inscrits :</b> %{customdata[2]}<br>"+
-    #     "<b>Abstention :</b> %{customdata[3]}<br>"+
-    #     "<b>%{customdata[5]} :</b> %{customdata[4]}<br>"+
-    #     "<b>Score :</b> %{customdata[6]}<br>"+
-    #     "<b>Nuance :</b> %{customdata[7]}")
-    # for f in fig.frames:
-    #     for i in range(len(f.data)):
-    #         f.data[i].update(hovertemplate="<b>ID Bureau de vote :</b> %{customdata[8]}<br>"+
-    #         "<b>Election :</b> %{customdata[0]}<br>"+
-    #         "<b>Bureau de vote :</b> %{customdata[1]}<br>"+
-    #         "<b>Nb inscrits :</b> %{customdata[2]}<br>"+
-    #         "<b>Abstention :</b> %{customdata[3]}<br>"+
-    #         "<b>%{customdata[5]} :</b> %{customdata[4]}<br>"+
-    #         "<b>Score :</b> %{customdata[6]}<br>"+
-    #         "<b>Nuance :</b> %{customdata[7]}")
+    fig.update_traces(hovertemplate="<b>ID Bureau de vote :</b> %{customdata[8]}<br>"+
+                                    "<b>Election :</b> %{customdata[0]}<br>"+
+                                    "<b>Bureau de vote :</b> %{customdata[1]}<br>"+
+                                    "<b>N° inscrits :</b> %{customdata[2]}<br>"+
+                                    "<b>Abstention :</b> %{customdata[3]}%<br>"+
+                                    "<b>% voix exprimées :</b> %{customdata[6]}%<br>"+
+                                    "<b>Score :</b> %{customdata[4]}<br>"+
+                                    "<b>Nuance :</b> %{customdata[7]}")
     
-    #
-    return fig
-
-def map_result_bis(data_source):
-    data = []
-    for election_year in data_source["election"].unique():
-        df_filtered = data_source[data_source["election"] == election_year]
-        scatter = go.Scattermapbox(
-            lat=df_filtered["latitude"],
-            lon=df_filtered["longitude"],
-            mode="markers",
-            marker=dict(
-                size=df_filtered["size"],
-                sizemode="diameter",
-                sizemin=3,
-                color=[dict_plotly[label] for label in df_filtered["Libellé"]],
-            ),
-            customdata=df_filtered[['Libellé', 'election']].values,
-            name=f"Election {election_year}",
-            hoverinfo="text",
-            hovertext=df_filtered["Libellé"],
-            visible=(election_year == data_source["election"].min())
-        )
-        data.append(scatter)
-
-    fig = go.Figure(data=data)
     fig.update_layout(
-        mapbox=dict(
-            style="open-street-map",
-            zoom=4,
-            center=dict(lat=48.8566, lon=2.3522)
-        ),
-        updatemenus=[
-            dict(
-                buttons=[
-                    dict(
-                        label=str(year),
-                        method="update",
-                        args=[{"visible": [election_year == year for election_year in data_source["election"].unique()]}]
-                    )
-                    for year in data_source["election"].unique()
-                ],
-                direction="down",
-                showactive=True,
-                x=0.5,
-                xanchor="center",
-                y=1.15,
-                yanchor="top"
-            )
-        ],
-        width=1400,
-        height=1000
+        legend_title_text="",
+        legend=dict(yanchor="top", y=0.98, xanchor="right", x=0.99),
+        mapbox=dict(center=dict(lat=48.8566, lon=2.3522), zoom=12,
+                    bounds=dict(west=2.1441, east=2.5699, south=48.056, north=49.0021))
     )
 
     return fig
+
+
+st.cache_data()
+def st_load_data():
+    df = pd.read_parquet(os.path.join("data", "st_source", "st_results_per_adress.parquet"))
+    df["election_clean"] = df["election"].map(election_name_clean)
+    df["election_order"] = df["election"].map(election_order)
+    df_results_per_adress = df.query("type != 'Bureau de vote'")
+    # df_results_per_adress["color"] = df_results_per_adress["Libellé"].map(dict_plotly)
+    df_results_per_adress.sort_values(by=["election_order"], inplace=True)
+    df_results_per_bv = pd.read_parquet(os.path.join("data", "st_source", "st_results_per_bv.parquet"))
+    df_results_per_bv["election_order"] = df_results_per_bv["election"].map(election_order)
+    return df_results_per_adress, df_results_per_bv
+
+# Streamlit app
 st.set_page_config(
     page_title="carte_elections_paris",
     page_icon="🗳️",
@@ -174,22 +129,6 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-st.cache_data()
-def st_load_data():
-    df = pd.read_parquet(os.path.join("data", "st_source", "st_results_per_adress.parquet"))
-    # df["election_clean"] = df["election"].map(election_name_clean)
-    # df["election_order"] = df["election"].map(election_order)
-    df_results_per_adress = df.query("type != 'Bureau de vote'")
-    df_results_per_adress = df_results_per_adress[df_results_per_adress["election"].isin(["2022_t1_presidentielles","2022_t2_presidentielles"])]
-    # df_results_per_adress["color"] = df_results_per_adress["Libellé"].map(dict_plotly)
-    # df_results_per_adress.sort_values(by=["election_order"], inplace=True)
-    df_results_per_bv = pd.read_parquet(os.path.join("data", "st_source", "st_results_per_bv.parquet"))
-    df_results_per_bv["election_order"] = df_results_per_bv["election"].map(election_order)
-    return df_results_per_adress, df_results_per_bv
-
-geodata_final_copy_adresses_only, results_per_bv = st_load_data()
-geodata_final_copy_adresses_only.query("longitude==2.387518")
-# Streamlit app
 st.title("🗳️ Résultats des élections locales et nationales à Paris")
 st.write("""
     💡 Depuis 2019, un fichier de correspondance entre les **bureaux de vote** et \
@@ -203,13 +142,25 @@ st.write("""
     sont intégrés (les résultats des élections antérieures seront ajoutés ultérieurement).
     """)
 
-# st.cache_data()
-def get_map():
-    map_plotly = map_result_bis(geodata_final_copy_adresses_only)
+st.cache_data()
+def get_map(data):
+    map_plotly = map_results(data)
     return map_plotly
 
-# print(geodata_final_copy_adresses_only.query("election_clean=='2022-Présidentielles-T2'")["Libellé"].unique())
-st.plotly_chart(get_map(), use_container_width=True, config={"scrollZoom": True})
+geodata_final_copy_adresses_only, results_per_bv = st_load_data()
+
+# Selection Box
+selected_election = st.selectbox(
+    label="Sélectionner une élection", 
+    options = geodata_final_copy_adresses_only["election_clean"].unique(),
+    index = len(geodata_final_copy_adresses_only["election_clean"].unique()) - 1
+    )
+
+# Filter data based on selection
+filtered_data = geodata_final_copy_adresses_only[geodata_final_copy_adresses_only["election_clean"] == selected_election]
+
+if not filtered_data.empty:
+    st.plotly_chart(get_map(filtered_data), use_container_width=True, config={"scrollZoom": True})
 
 with st.container(border=True):
     st.subheader("📊 Données détaillées des résultats par bureau de vote")
