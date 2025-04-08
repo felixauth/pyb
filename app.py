@@ -32,18 +32,32 @@ election_name_clean = {
     "2022_t2_presidentielles": "2022-Présidentielles-T2",
     "2020_t1_municipales": "2020-Municipales-T1",
     "2020_t2_municipales": "2020-Municipales-T2",
+    "2019_europeennes": "2019-Européennes",
+    "2017_t1_legislatives": "2017-Législatives-T1",
+    "2017_t2_legislatives": "2017-Législatives-T2",
+    "2017_t1_presidentielles": "2017-Présidentielles-T1",
+    "2017_t2_presidentielles": "2017-Présidentielles-T2",
+    "2014_t1_municipales": "2014-Municipales-T1",
+    "2014_t2_municipales": "2014-Municipales-T2"
 }
 
 election_order = {
-    "2024_t1_legislatives": 7,
-    "2024_t2_legislatives": 8,
-    "2024_europeennes": 6,
+    "2024_t1_legislatives": 1,
+    "2024_t2_legislatives": 0,
+    "2024_europeennes": 2,
     "2022_t1_legislatives": 4,
-    "2022_t2_legislatives": 5,
-    "2022_t1_presidentielles": 2,
-    "2022_t2_presidentielles": 3,
-    "2020_t1_municipales": 0,
-    "2020_t2_municipales": 1,
+    "2022_t2_legislatives": 3,
+    "2022_t1_presidentielles": 6,
+    "2022_t2_presidentielles": 5,
+    "2020_t1_municipales": 8,
+    "2020_t2_municipales": 7,
+    "2019_europeennes": 9,
+    "2017_t1_legislatives": 11,
+    "2017_t2_legislatives": 10,
+    "2017_t1_presidentielles": 13,
+    "2017_t2_presidentielles": 12,
+    "2014_t1_municipales": 15,
+    "2014_t2_municipales": 14
 }
 
 dict_plotly = {'Ensemble ! (Majorité présidentielle)': 'rgb(114, 9, 183)',
@@ -59,7 +73,15 @@ dict_plotly = {'Ensemble ! (Majorité présidentielle)': 'rgb(114, 9, 183)',
  'La France insoumise':'rgb(157, 2, 8)',
  'Rassemblement National':'rgb(34, 34, 59)',
  'Les Républicains':'rgb(58, 12, 163)',
- 'La République en marche': 'rgb(127, 85, 57)',
+ 'La République en marche': 'rgb(114, 9, 183)',
+ 'Socialiste': 'rgb(232, 93, 4)',
+ 'Modem': 'rgb(108, 117, 125)',
+ 'Liste Union pour un Mouvement Populaire':'#0466c8',
+ 'Union des Démocrates et Indépendants': 'rgb(108, 117, 125)',
+ 'LA FRANCE INSOUMISE':'rgb(157, 2, 8)',
+ 'RENAISSANCE': 'rgb(114, 9, 183)',
+ 'EUROPE ÉCOLOGIE': 'rgb(56, 176, 0)',
+ 'PRENEZ LE POUVOIR': 'rgb(34, 34, 59)'
  }
 
 def map_results(data_source: pd.DataFrame):
@@ -116,7 +138,7 @@ def st_load_data():
     df["election_order"] = df["election"].map(election_order)
     df_results_per_adress = df.query("type != 'Bureau de vote'")
     # df_results_per_adress["color"] = df_results_per_adress["Libellé"].map(dict_plotly)
-    df_results_per_adress.sort_values(by=["election_order"], inplace=True)
+    df_results_per_adress.sort_values(by=["election_order"], ascending=False, inplace=True)
     df_results_per_bv = pd.read_parquet(os.path.join("data", "st_source", "st_results_per_bv.parquet"))
     df_results_per_bv["election_order"] = df_results_per_bv["election"].map(election_order)
     return df_results_per_adress, df_results_per_bv
@@ -136,10 +158,9 @@ st.write("""
     Ce fichier est mis à jour tous les 5 ans. ([source](https://www.data.gouv.fr/fr/datasets/bureaux-de-vote-et-adresses-de-leurs-electeurs/))
 
     🗺️ Chaque point sur la carte représente ainsi l’**adresse d’un électeur** \
-    et la couleur du point le **résultat du bureau de vote** auquel l’électeur est rattaché.
+    et la couleur du point le **résultat du bureau de vote (candidat arrivé en tête)** auquel l’électeur est rattaché.
 
-    📬 À ce stade, seuls les résultats des **premier et second tours des élections législatives anticipées de 2024** \
-    sont intégrés (les résultats des élections antérieures seront ajoutés ultérieurement).
+    📬 Tous les résultats des élections **municipales, présidentielles, législatives et européennes depuis 2014** sont inclus.
     """)
 
 st.cache_data()
