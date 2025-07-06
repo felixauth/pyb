@@ -43,11 +43,11 @@ def filter_dataframe(df: pd.DataFrame) -> pd.DataFrame:
         for column in to_filter_columns:
             left, right = st.columns((1, 20))
             # Treat columns with < 10 unique values as categorical
-            if is_categorical_dtype(df[column]) or df[column].nunique() < 10:
+            if is_categorical_dtype(df[column]) or df[column].nunique() < 100:
                 user_cat_input = right.multiselect(
                     f"Valeur pour {column}",
                     df[column].unique(),
-                    default=list(df[column].unique()),
+                    # default=list(df[column].unique()),
                 )
                 df = df[df[column].isin(user_cat_input)]
             elif is_numeric_dtype(df[column]):

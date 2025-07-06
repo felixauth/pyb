@@ -36,7 +36,7 @@ def map_results(data_source: pd.DataFrame):
                                     "<b>N° inscrits :</b> %{customdata[2]}<br>"+
                                     "<b>Abstention :</b> %{customdata[3]}%<br>"+
                                     "<b>% voix exprimées :</b> %{customdata[6]}%<br>"+
-                                    "<b>Score :</b> %{customdata[4]}<br>"+
+                                    "<b>Candidat arrivé en tête :</b> %{customdata[4]}<br>"+
                                     "<b>Nuance :</b> %{customdata[7]}")
     
     fig.update_layout(
