@@ -82,3 +82,41 @@ def filter_dataframe(df: pd.DataFrame) -> pd.DataFrame:
                     df = df[df[column].astype(str).str.lower().str.contains(user_text_input.lower())]
 
     return df
+
+def radio_button_election():
+    plac1 = st.empty()
+    election = plac1.radio(
+        "Choisir une élection :",
+        ["2020-Municipales-T1","2022-Présidentielles-T1"],
+        index=1,
+        horizontal=True
+    )
+    return plac1, election
+
+def radio_button_candidate(election:str):
+    plac2 = st.empty()
+    if election == "2020-Municipales-T1":
+        text_button = "Choisir une liste :"
+        choices = [
+            "ENSEMBLE POUR PARIS AVEC AGNES BUZYN",
+            "LE NOUVEAU PARIS (CEDRIC VILLANI)",
+            "ENGAGES POUR CHANGER PARIS AVEC RACHIDA DATI",
+            "ENSEMBLE POUR PARIS AVEC AGNES BUZYN+LE NOUVEAU PARIS (CEDRIC VILLANI)",
+            "ENSEMBLE POUR PARIS AVEC AGNES BUZYN+LE NOUVEAU PARIS (CEDRIC VILLANI)+ENGAGES POUR CHANGER PARIS AVEC RACHIDA DATI"
+            ]
+    else:
+        text_button = "Choisir un candidat :"
+        choices = [
+            "MACRON Emmanuel",
+            "PÉCRESSE Valérie",
+            "MACRON Emmanuel+PÉCRESSE Valérie"
+            ]
+        
+    candidate = plac2.radio(
+        text_button,
+        choices,
+        index=0,
+        horizontal=True
+    )
+    
+    return plac2, candidate
