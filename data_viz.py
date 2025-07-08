@@ -60,13 +60,17 @@ def map_results_spec(data_source: pd.DataFrame):
         "id_brut_bv_reu"
     ]
 
+    bucket_order = ['[<=10%]', '[11%-15%]', '[16%-20%]','[21%-25%]', '[26%-30%]', '[>30%]']
+    data_source['score_bucket'] = pd.Categorical(data_source['score_bucket'], categories=bucket_order, ordered=True)
+    data_source.sort_values(by='score_bucket', inplace=True)
+    
     fig = px.scatter_mapbox(
         data_source,
         lat="latitude",
         lon="longitude",
         color="score_bucket",
         mapbox_style="open-street-map",
-        # size=20,
+        size="size",
         size_max=3,
         # color_discrete_map=dict_plotly,
         width=1400,
