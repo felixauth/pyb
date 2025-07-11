@@ -30,14 +30,14 @@ def map_results(data_source: pd.DataFrame):
         custom_data=customdata
     )
 
-    fig.update_traces(hovertemplate="<b>ID Bureau de vote :</b> %{customdata[8]}<br>"+
-                                    "<b>Election :</b> %{customdata[0]}<br>"+
+    fig.update_traces(hovertemplate="<b>Election :</b> %{customdata[0]}<br>"+
+                                    "<b>ID Bureau de vote :</b> %{customdata[8]}<br>"+
                                     "<b>Bureau de vote :</b> %{customdata[1]}<br>"+
-                                    "<b>N° inscrits :</b> %{customdata[2]}<br>"+
+                                    "<b>Candidat ou liste :</b> %{customdata[4]}<br>"+
+                                    "<b>Nuance :</b> %{customdata[7]}<br>"+
+                                    "<b>Score :</b> %{customdata[6]}%<br>"+
                                     "<b>Abstention :</b> %{customdata[3]}%<br>"+
-                                    "<b>% voix exprimées :</b> %{customdata[6]}%<br>"+
-                                    "<b>Candidat arrivé en tête :</b> %{customdata[4]}<br>"+
-                                    "<b>Nuance :</b> %{customdata[7]}")
+                                    "<b>N° inscrits :</b> %{customdata[2]}<br>")
     
     fig.update_layout(
         legend_title_text="",
@@ -57,7 +57,8 @@ def map_results_spec(data_source: pd.DataFrame):
         "perc_abstentions",
         "candidat_ou_liste",
         "perc_voix_exprimes",
-        "id_brut_bv_reu"
+        "id_brut_bv_reu",
+        "score_arr_moyen"
     ]
 
     bucket_order = ['[<=10%]', '[11%-15%]', '[16%-20%]','[21%-25%]', '[26%-30%]', '[>30%]']
@@ -78,13 +79,14 @@ def map_results_spec(data_source: pd.DataFrame):
         custom_data=customdata
     )
 
-    fig.update_traces(hovertemplate="<b>ID Bureau de vote :</b> %{customdata[6]}<br>"+
-                                    "<b>Election :</b> %{customdata[0]}<br>"+
+    fig.update_traces(hovertemplate="<b>Election :</b> %{customdata[0]}<br>"+
+                                    "<b>ID Bureau de vote :</b> %{customdata[6]}<br>"+
                                     "<b>Bureau de vote :</b> %{customdata[1]}<br>"+
-                                    "<b>N° inscrits :</b> %{customdata[2]}<br>"+
+                                    "<b>Candidat ou liste :</b> %{customdata[4]}<br>"+
+                                    "<b>Score :</b> %{customdata[5]}%<br>"+
+                                    "<b>Score moyen de l'arrondissement :</b> %{customdata[7]}%<br>"+
                                     "<b>Abstention :</b> %{customdata[3]}%<br>"+
-                                    "<b>% voix exprimées :</b> %{customdata[5]}%<br>"+
-                                    "<b>Candidat ou liste :</b> %{customdata[4]}<br>")
+                                    "<b>N° inscrits :</b> %{customdata[2]}<br>")
     
     fig.update_layout(
         legend_title_text="",

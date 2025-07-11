@@ -1,5 +1,5 @@
 import streamlit as st
-from utils import filter_dataframe,radio_button_munic_2020, radio_button_pres_2022 
+from utils import filter_dataframe,radio_button_munic_2020, radio_button_pres_2022, radio_button_munic_2020_subfilter, radio_button_pres_2022_subfilter, filter_focus_df
 from data_source import st_load_data_all_elections, st_load_data_source, st_load_data_spec_analysis, get_map, get_map_spec
 
 # Configuration of the page
@@ -22,10 +22,7 @@ st.write("""
     les **adresses des électeurs** est élaboré à partir du Répertoire Electoral Unique (REU). \
     Ce fichier est mis à jour tous les 5 ans. ([source](https://www.data.gouv.fr/fr/datasets/bureaux-de-vote-et-adresses-de-leurs-electeurs/))
 
-    🗺️ Chaque point sur la carte représente ainsi l’**adresse d’un électeur** \
-    et la couleur du point le **résultat du bureau de vote (candidat arrivé en tête)** auquel l’électeur est rattaché.
-
-    📬 Tous les résultats des élections **municipales, présidentielles, législatives et européennes depuis 2014** sont inclus.
+    🗺️ Chaque point sur la carte représente ainsi l’**adresse d’un électeur**.
     """)
 
 tab1, tab2, tab3, tab4 = st.tabs([
@@ -36,7 +33,10 @@ tab1, tab2, tab3, tab4 = st.tabs([
     ])
 
 with tab1:
-
+    
+    st.write("📬 Tous les résultats des élections **municipales, présidentielles, législatives et européennes depuis 2014** sont inclus. \
+        La couleur du point le **résultat du bureau de vote (candidat arrivé en tête)** auquel l’électeur est rattaché.")
+    
     # Selection Box for election choice
     selected_election = st.selectbox(
         label="Sélectionner une élection", 
@@ -55,9 +55,14 @@ with tab2:
     
     election_tab2 = "2022-Présidentielles-T1"
     plac2, candidate_tab2 = radio_button_pres_2022(election_tab2)
+    plac2_b, filter_choice_pres = radio_button_pres_2022_subfilter()
     
     # Filtering data
-    filtered_spec_data_tab2 = geodata_final_specific_analysis.query("election_clean == @election_tab2").query("candidat_ou_liste == @candidate_tab2")
+    # filtered_spec_data_tab2 = geodata_final_specific_analysis.query("election_clean == @election_tab2").query("candidat_ou_liste == @candidate_tab2")
+    filtered_spec_data_tab2, mean_score_paris_tab2 = filter_focus_df(geodata_final_specific_analysis, election_tab2, candidate_tab2, filter_choice_pres)
+    
+    # See mean score Paris
+    st.write(f"🎯 Score moyen Paris : **{mean_score_paris_tab2}%**")
     
     # Showing map
     if not filtered_spec_data_tab2.empty:
@@ -67,10 +72,16 @@ with tab3:
     
     election_tab3 = "2020-Municipales-T1"
     plac3, candidate_tab3 = radio_button_munic_2020(election_tab2)
+    plac3_b, filter_choice_munic = radio_button_munic_2020_subfilter()
     
     # Filtering data
     candidate_tab3 = candidate_tab3.replace(" (CEDRIC VILLANI)", "")
-    filtered_spec_data_tab3 = geodata_final_specific_analysis.query("election_clean == @election_tab3").query("candidat_ou_liste == @candidate_tab3")
+    
+    # filtered_spec_data_tab3 = geodata_final_specific_analysis.query("election_clean == @election_tab3").query("candidat_ou_liste == @candidate_tab3")
+    filtered_spec_data_tab3, mean_score_paris_tab3 = filter_focus_df(geodata_final_specific_analysis, election_tab3, candidate_tab3, filter_choice_munic)
+    
+    # See mean score Paris
+    st.write(f"🎯 Score moyen Paris : **{mean_score_paris_tab3}%**")
     
     # Showing map
     if not filtered_spec_data_tab3.empty:
