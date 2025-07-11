@@ -83,40 +83,50 @@ def filter_dataframe(df: pd.DataFrame) -> pd.DataFrame:
 
     return df
 
-def radio_button_election():
-    plac1 = st.empty()
-    election = plac1.radio(
-        "Choisir une élection :",
-        ["2020-Municipales-T1","2022-Présidentielles-T1"],
-        index=1,
-        horizontal=True
-    )
-    return plac1, election
+# def radio_button_election():
+#     plac1 = st.empty()
+#     election = plac1.radio(
+#         "Choisir une élection :",
+#         ["2020-Municipales-T1","2022-Présidentielles-T1"],
+#         index=1,
+#         horizontal=True
+#     )
+#     return plac1, election
 
-def radio_button_candidate(election:str):
+def radio_button_pres_2022(election:str):
     plac2 = st.empty()
-    if election == "2020-Municipales-T1":
-        text_button = "Choisir une liste :"
-        choices = [
+    text_button = "Choisir un candidat :"
+    choices = [
+            "MACRON Emmanuel",
+            "PÉCRESSE Valérie",
+            "MACRON Emmanuel+PÉCRESSE Valérie"
+            ]
+    candidate = plac2.radio(
+        text_button,
+        choices,
+        index=0,
+        horizontal=True,
+        key="pres_2022"
+    )
+    
+    return plac2, candidate
+
+def radio_button_munic_2020(election:str):
+    plac3 = st.empty()
+    text_button = "Choisir une liste :"
+    choices = [
             "ENSEMBLE POUR PARIS AVEC AGNES BUZYN",
             "LE NOUVEAU PARIS (CEDRIC VILLANI)",
             "ENGAGES POUR CHANGER PARIS AVEC RACHIDA DATI",
             "ENSEMBLE POUR PARIS AVEC AGNES BUZYN+LE NOUVEAU PARIS (CEDRIC VILLANI)",
             "ENSEMBLE POUR PARIS AVEC AGNES BUZYN+LE NOUVEAU PARIS (CEDRIC VILLANI)+ENGAGES POUR CHANGER PARIS AVEC RACHIDA DATI"
             ]
-    else:
-        text_button = "Choisir un candidat :"
-        choices = [
-            "MACRON Emmanuel",
-            "PÉCRESSE Valérie",
-            "MACRON Emmanuel+PÉCRESSE Valérie"
-            ]
-        
-    candidate = plac2.radio(
+    candidate = plac3.radio(
         text_button,
         choices,
         index=0,
-        horizontal=True
+        horizontal=True,
+        key="munic_2020"
     )
     
-    return plac2, candidate
+    return plac3, candidate

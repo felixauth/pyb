@@ -1,5 +1,5 @@
 import pandas as pd
-from mapping import dict_plotly
+from mapping import dict_plotly, dict_echelle_score
 import plotly.express as px
 
 def map_results(data_source: pd.DataFrame):
@@ -61,18 +61,18 @@ def map_results_spec(data_source: pd.DataFrame):
     ]
 
     bucket_order = ['[<=10%]', '[11%-15%]', '[16%-20%]','[21%-25%]', '[26%-30%]', '[>30%]']
-    data_source['score_bucket'] = pd.Categorical(data_source['score_bucket'], categories=bucket_order, ordered=True)
-    data_source.sort_values(by='score_bucket', inplace=True)
+    data_source['echelle_score'] = pd.Categorical(data_source['echelle_score'], categories=bucket_order, ordered=True)
+    data_source.sort_values(by='echelle_score', inplace=True)
     
     fig = px.scatter_mapbox(
         data_source,
         lat="latitude",
         lon="longitude",
-        color="score_bucket",
+        color="echelle_score",
         mapbox_style="open-street-map",
         size="size",
         size_max=3,
-        # color_discrete_map=dict_plotly,
+        color_discrete_map=dict_echelle_score,
         width=1400,
         height=1000,
         custom_data=customdata

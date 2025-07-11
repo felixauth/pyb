@@ -1,5 +1,5 @@
 import streamlit as st
-from utils import filter_dataframe, radio_button_candidate, radio_button_election
+from utils import filter_dataframe,radio_button_munic_2020, radio_button_pres_2022 
 from data_source import st_load_data_all_elections, st_load_data_source, st_load_data_spec_analysis, get_map, get_map_spec
 
 # Configuration of the page
@@ -28,7 +28,12 @@ st.write("""
     📬 Tous les résultats des élections **municipales, présidentielles, législatives et européennes depuis 2014** sont inclus.
     """)
 
-tab1, tab2, tab3 = st.tabs(["Candidats arrivés en tête - 2014-2024","Focus 1er tour Présidentielles 2022", "Données source"])
+tab1, tab2, tab3, tab4 = st.tabs([
+    "Candidats arrivés en tête - 2014-2024",
+    "Focus 1er tour Présidentielles 2022",
+    "Focus 1er tour Municipales 2020", 
+    "Données source"
+    ])
 
 with tab1:
 
@@ -47,18 +52,32 @@ with tab1:
         st.plotly_chart(get_map(filtered_data), use_container_width=True, config={"scrollZoom": True})
 
 with tab2:
-    plac1, election = radio_button_election()
-    plac2, candidate = radio_button_candidate(election)
+    
+    election_tab2 = "2022-Présidentielles-T1"
+    plac2, candidate_tab2 = radio_button_pres_2022(election_tab2)
     
     # Filtering data
-    candidate = candidate.replace(" (CEDRIC VILLANI)", "")
-    filtered_spec_data = geodata_final_specific_analysis.query("election_clean == @election").query("candidat_ou_liste == @candidate")
+    filtered_spec_data_tab2 = geodata_final_specific_analysis.query("election_clean == @election_tab2").query("candidat_ou_liste == @candidate_tab2")
     
     # Showing map
-    if not filtered_spec_data.empty:
-        st.plotly_chart(get_map_spec(filtered_spec_data), use_container_width=True, config={"scrollZoom": True})
-            
+    if not filtered_spec_data_tab2.empty:
+        st.plotly_chart(get_map_spec(filtered_spec_data_tab2), use_container_width=True, config={"scrollZoom": True}, key="pres_t1")
+
 with tab3:
+    
+    election_tab3 = "2020-Municipales-T1"
+    plac3, candidate_tab3 = radio_button_munic_2020(election_tab2)
+    
+    # Filtering data
+    candidate_tab3 = candidate_tab3.replace(" (CEDRIC VILLANI)", "")
+    filtered_spec_data_tab3 = geodata_final_specific_analysis.query("election_clean == @election_tab3").query("candidat_ou_liste == @candidate_tab3")
+    
+    # Showing map
+    if not filtered_spec_data_tab3.empty:
+        st.plotly_chart(get_map_spec(filtered_spec_data_tab3), use_container_width=True, config={"scrollZoom": True}, key="munic_t1")
+
+with tab4:
+    
     # Showing detailed results
     with st.container(border=True):
         st.subheader("📊 Données détaillées des résultats par bureau de vote")
