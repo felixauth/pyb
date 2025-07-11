@@ -58,7 +58,8 @@ dict_plotly = {
     'LA FRANCE INSOUMISE':'rgb(157, 2, 8)',
     'RENAISSANCE': 'rgb(114, 9, 183)',
     'EUROPE ÉCOLOGIE': 'rgb(56, 176, 0)',
-    'PRENEZ LE POUVOIR': 'rgb(34, 34, 59)'
+    'PRENEZ LE POUVOIR': 'rgb(34, 34, 59)',
+    'Liste des Verts': 'rgb(56, 176, 0)'
  }
 
 dict_echelle_score = {

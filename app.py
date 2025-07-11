@@ -1,6 +1,6 @@
 import streamlit as st
 from utils import filter_dataframe,radio_button_munic_2020, radio_button_pres_2022, radio_button_munic_2020_subfilter, radio_button_pres_2022_subfilter, filter_focus_df
-from data_source import st_load_data_all_elections, st_load_data_source, st_load_data_spec_analysis, get_map, get_map_spec
+from data_source import st_load_data_all_elections, st_load_data_source, st_load_data_spec_analysis, get_map, get_map_go,get_map_spec, get_map_spec_go
 
 # Configuration of the page
 st.set_page_config(
@@ -49,7 +49,7 @@ with tab1:
 
     # Showing map
     if not filtered_data.empty:
-        st.plotly_chart(get_map(filtered_data), use_container_width=True, config={"scrollZoom": True})
+        st.plotly_chart(get_map_go(filtered_data), use_container_width=True, config={"scrollZoom": True})
 
 with tab2:
     
@@ -62,11 +62,11 @@ with tab2:
     filtered_spec_data_tab2, mean_score_paris_tab2 = filter_focus_df(geodata_final_specific_analysis, election_tab2, candidate_tab2, filter_choice_pres)
     
     # See mean score Paris
-    st.write(f"🎯 Score moyen Paris : **{mean_score_paris_tab2}%**")
+    st.write(f"🎯 Score moyen Paris, tous bureaux de vote : **{mean_score_paris_tab2}%**")
     
     # Showing map
     if not filtered_spec_data_tab2.empty:
-        st.plotly_chart(get_map_spec(filtered_spec_data_tab2), use_container_width=True, config={"scrollZoom": True}, key="pres_t1")
+        st.plotly_chart(get_map_spec_go(filtered_spec_data_tab2), use_container_width=True, config={"scrollZoom": True}, key="pres_t1")
 
 with tab3:
     
@@ -81,11 +81,11 @@ with tab3:
     filtered_spec_data_tab3, mean_score_paris_tab3 = filter_focus_df(geodata_final_specific_analysis, election_tab3, candidate_tab3, filter_choice_munic)
     
     # See mean score Paris
-    st.write(f"🎯 Score moyen Paris : **{mean_score_paris_tab3}%**")
+    st.write(f"🎯 Score moyen Paris, tous bureaux de vote : **{mean_score_paris_tab3}%**")
     
     # Showing map
     if not filtered_spec_data_tab3.empty:
-        st.plotly_chart(get_map_spec(filtered_spec_data_tab3), use_container_width=True, config={"scrollZoom": True}, key="munic_t1")
+        st.plotly_chart(get_map_spec_go(filtered_spec_data_tab3), use_container_width=True, config={"scrollZoom": True}, key="munic_t1")
 
 with tab4:
     

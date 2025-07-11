@@ -2,7 +2,7 @@ import pandas as pd
 import streamlit as st
 import os
 from mapping import election_name_clean, election_order
-from data_viz import map_results, map_results_spec
+from data_viz import map_results, map_results_go, map_results_spec, map_results_spec_go
 
 st.cache_data()
 def st_load_data_all_elections():
@@ -32,6 +32,16 @@ def get_map(data):
     return map_plotly
 
 st.cache_data()
+def get_map_go(data):
+    map_plotly = map_results_go(data)
+    return map_plotly
+
+st.cache_data()
 def get_map_spec(data):
     map_plotly = map_results_spec(data)
+    return map_plotly
+
+st.cache_data()
+def get_map_spec_go(data):
+    map_plotly = map_results_spec_go(data)
     return map_plotly
