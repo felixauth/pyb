@@ -176,7 +176,9 @@ def map_results_spec_go(data_source: pd.DataFrame):
         "candidat_ou_liste",
         "perc_voix_exprimes",
         "id_brut_bv_reu",
-        "score_arr_moyen"
+        "score_arr_moyen",
+        "candidat_ou_liste_en_tete",
+        "perc_voix_exprimes_vainqueur"
     ]
 
     # Define and enforce category order for legend
@@ -213,6 +215,8 @@ def map_results_spec_go(data_source: pd.DataFrame):
                           "<b>Bureau de vote :</b> %{customdata[1]}<br>" +
                           "<b>Candidat ou liste :</b> %{customdata[4]}<br>" +
                           "<b>Score :</b> %{customdata[5]}%<br>" +
+                          "<b>Candidat ou liste arrivé(e) en tête :</b> %{customdata[8]}<br>" +
+                          "<b>Score candidat ou liste arrivé(e) en tête :</b> %{customdata[9]}%<br>" +
                           "<b>Score moyen de l'arrondissement :</b> %{customdata[7]}%<br>" +
                           "<b>Abstention :</b> %{customdata[3]}%<br>" +
                           "<b>N° inscrits :</b> %{customdata[2]}<br><extra></extra>"

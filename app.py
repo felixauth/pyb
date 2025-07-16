@@ -91,7 +91,7 @@ with tab4:
     
     # Showing detailed results
     with st.container(border=True):
-        st.subheader("📊 Données détaillées des résultats par bureau de vote")
+        st.subheader("📊 Résultats par bureau de vote")
         results_per_bv.sort_values(
             by=["election_order","id_brut_bv_reu","perc_voix_exprimes"],
             ascending=[True, True, False],
@@ -112,5 +112,16 @@ with tab4:
         ].reset_index(drop=True)
 
         st.dataframe(filter_dataframe(st_df), hide_index=True)
-
+        extract_button_bv = st.button("Télécharger les données au format Excel", key="extract_bv")
+        if extract_button_bv:
+            st_df.to_excel("resultats_elections_paris_par_bv.xlsx",index=False)
+            st.write("✅ Données téléchargées !")
+            
+        # Showing detailed results
+    with st.expander("📚 Données détaillées avec adresses des électeurs"):
+        st.dataframe(geodata_final_specific_analysis, hide_index=True)
+        extract_button = st.button("Télécharger les données au format Excel", key="extract_detailed")
+        if extract_button:
+            geodata_final_specific_analysis.to_excel("donnees_detaillees_elections_paris.xlsx",index=False)
+            st.write("✅ Données téléchargées !")
 
