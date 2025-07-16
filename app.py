@@ -25,11 +25,11 @@ st.write("""
     🗺️ Chaque point sur la carte représente ainsi l’**adresse d’un électeur**.
     """)
 
-tab1, tab2, tab3, tab4 = st.tabs([
+tab1, tab2, tab3 = st.tabs([
     "Candidats arrivés en tête - 2014-2024",
     "Focus 1er tour Présidentielles 2022",
     "Focus 1er tour Municipales 2020", 
-    "Données source"
+    # "Données source"
     ])
 
 with tab1:
@@ -90,31 +90,31 @@ with tab3:
     if not filtered_spec_data_tab3.empty:
         st.plotly_chart(get_map_spec_go(filtered_spec_data_tab3), use_container_width=True, config={"scrollZoom": True}, key="munic_t1")
 
-with tab4:
+# with tab4:
     
-    # Showing detailed results
-    with st.container(border=True):
-        st.subheader("📊 Résultats par bureau de vote")
-        results_per_bv.sort_values(
-            by=["election_order","id_brut_bv_reu","perc_voix_exprimes"],
-            ascending=[True, True, False],
-            inplace=True
-            )
-        st_df = results_per_bv[
-            [
-                "election",
-                "id_brut_bv_reu",
-                "adresse_bv",
-                "nom_bv",
-                "inscrits",
-                "perc_abstentions",
-                "nom_cand_ou_liste",
-                "Libellé",
-                "perc_voix_exprimes"
-            ]
-        ].reset_index(drop=True)
+#     # Showing detailed results
+#     with st.container(border=True):
+#         st.subheader("📊 Résultats par bureau de vote")
+#         results_per_bv.sort_values(
+#             by=["election_order","id_brut_bv_reu","perc_voix_exprimes"],
+#             ascending=[True, True, False],
+#             inplace=True
+#             )
+#         st_df = results_per_bv[
+#             [
+#                 "election",
+#                 "id_brut_bv_reu",
+#                 "adresse_bv",
+#                 "nom_bv",
+#                 "inscrits",
+#                 "perc_abstentions",
+#                 "nom_cand_ou_liste",
+#                 "Libellé",
+#                 "perc_voix_exprimes"
+#             ]
+#         ].reset_index(drop=True)
 
-        st.dataframe(filter_dataframe(st_df), hide_index=True)
+#         st.dataframe(filter_dataframe(st_df), hide_index=True)
         
         # @st.cache_data
         # def convert_for_download(df):
@@ -135,8 +135,8 @@ with tab4:
         # download_button_one()
         
         # Showing detailed results
-    with st.expander("📚 Données détaillées avec adresses des électeurs"):
-        st.dataframe(geodata_final_specific_analysis, hide_index=True)
+    # with st.expander("📚 Données détaillées avec adresses des électeurs"):
+    #     st.dataframe(geodata_final_specific_analysis, hide_index=True)
         # geodata_final_specific_analysis_csv = convert_for_download(geodata_final_specific_analysis)
 
         # # @st.fragment
