@@ -116,36 +116,36 @@ with tab4:
 
         st.dataframe(filter_dataframe(st_df), hide_index=True)
         
-        @st.cache_data
-        def convert_for_download(df):
-            return df.to_csv().encode("utf-8")
+        # @st.cache_data
+        # def convert_for_download(df):
+        #     return df.to_csv().encode("utf-8")
 
-        st_df_csv = convert_for_download(st_df)
+        # st_df_csv = convert_for_download(st_df)
 
         # @st.fragment
-        def download_button_one():
-            st.download_button(
-                label="Télécharger au format CSV",
-                data=st_df_csv,
-                file_name="resultats_par_bv.csv",
-                mime="text/csv",
-                icon=":material/download:",
-            )
+        # def download_button_one():
+        #     st.download_button(
+        #         label="Télécharger au format CSV",
+        #         data=st_df_csv,
+        #         file_name="resultats_par_bv.csv",
+        #         mime="text/csv",
+        #         icon=":material/download:",
+        #     )
             
-        download_button_one()
+        # download_button_one()
         
         # Showing detailed results
     with st.expander("📚 Données détaillées avec adresses des électeurs"):
         st.dataframe(geodata_final_specific_analysis, hide_index=True)
-        geodata_final_specific_analysis_csv = convert_for_download(geodata_final_specific_analysis)
+        # geodata_final_specific_analysis_csv = convert_for_download(geodata_final_specific_analysis)
 
-        # @st.fragment
-        def download_button_two():
-            st.download_button(
-                label="Télécharger au format CSV",
-                data=geodata_final_specific_analysis_csv,
-                file_name="resultats_detailles_par_bv_avec_adresses.csv",
-                mime="text/csv",
-                icon=":material/download:",
-            )
-        download_button_two()
+        # # @st.fragment
+        # def download_button_two():
+        #     st.download_button(
+        #         label="Télécharger au format CSV",
+        #         data=geodata_final_specific_analysis_csv,
+        #         file_name="resultats_detailles_par_bv_avec_adresses.csv",
+        #         mime="text/csv",
+        #         icon=":material/download:",
+        #     )
+        # download_button_two()
