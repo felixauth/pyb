@@ -35,7 +35,7 @@ tab1, tab2, tab3, tab4 = st.tabs([
 with tab1:
     
     st.write("📬 Tous les résultats des élections **municipales, présidentielles, législatives et européennes depuis 2014** sont inclus. \
-        La couleur du point le **résultat du bureau de vote (candidat arrivé en tête)** auquel l’électeur est rattaché.")
+        La couleur du point indique le **résultat du bureau de vote (candidat arrivé en tête)** auquel l’électeur est rattaché.")
     
     # Selection Box for election choice
     selected_election = st.selectbox(
@@ -52,6 +52,8 @@ with tab1:
         st.plotly_chart(get_map_go(filtered_data), use_container_width=True, config={"scrollZoom": True})
 
 with tab2:
+    st.write("📬 Cette carte affiche uniquement les résultats du premier tour de l'élection présidentielle 2022, pour le candidat et le filtre choisis. \
+        La couleur du point dépend du score du candidat sélectionné.")
     
     election_tab2 = "2022-Présidentielles-T1"
     plac2, candidate_tab2 = radio_button_pres_2022(election_tab2)
@@ -69,7 +71,8 @@ with tab2:
         st.plotly_chart(get_map_spec_go(filtered_spec_data_tab2), use_container_width=True, config={"scrollZoom": True}, key="pres_t1")
 
 with tab3:
-    
+    st.write("📬 Cette carte affiche uniquement les résultats du premier tour de l'élection municipale 2020, pour le candidat et le filtre choisis. \
+        La couleur du point dépend du score du candidat sélectionné.")
     election_tab3 = "2020-Municipales-T1"
     plac3, candidate_tab3 = radio_button_munic_2020(election_tab2)
     plac3_b, filter_choice_munic = radio_button_munic_2020_subfilter()
@@ -112,16 +115,37 @@ with tab4:
         ].reset_index(drop=True)
 
         st.dataframe(filter_dataframe(st_df), hide_index=True)
-        extract_button_bv = st.button("Télécharger les données au format Excel", key="extract_bv")
-        if extract_button_bv:
-            st_df.to_excel("resultats_elections_paris_par_bv.xlsx",index=False)
-            st.write("✅ Données téléchargées !")
+        
+        @st.cache_data
+        def convert_for_download(df):
+            return df.to_csv().encode("utf-8")
+
+        st_df_csv = convert_for_download(st_df)
+
+        @st.fragment
+        def download_button_one():
+            st.download_button(
+                label="Télécharger au format CSV",
+                data=st_df_csv,
+                file_name="resultats_par_bv.csv",
+                mime="text/csv",
+                icon=":material/download:",
+            )
             
+        download_button_one()
+        
         # Showing detailed results
     with st.expander("📚 Données détaillées avec adresses des électeurs"):
         st.dataframe(geodata_final_specific_analysis, hide_index=True)
-        extract_button = st.button("Télécharger les données au format Excel", key="extract_detailed")
-        if extract_button:
-            geodata_final_specific_analysis.to_excel("donnees_detaillees_elections_paris.xlsx",index=False)
-            st.write("✅ Données téléchargées !")
+        geodata_final_specific_analysis_csv = convert_for_download(geodata_final_specific_analysis)
 
+        @st.fragment
+        def download_button_two():
+            st.download_button(
+                label="Télécharger au format CSV",
+                data=geodata_final_specific_analysis_csv,
+                file_name="resultats_detailles_par_bv_avec_adresses.csv",
+                mime="text/csv",
+                icon=":material/download:",
+            )
+        download_button_two()
