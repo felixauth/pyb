@@ -122,7 +122,7 @@ with tab4:
 
         st_df_csv = convert_for_download(st_df)
 
-        @st.fragment
+        # @st.fragment
         def download_button_one():
             st.download_button(
                 label="Télécharger au format CSV",
@@ -139,7 +139,7 @@ with tab4:
         st.dataframe(geodata_final_specific_analysis, hide_index=True)
         geodata_final_specific_analysis_csv = convert_for_download(geodata_final_specific_analysis)
 
-        @st.fragment
+        # @st.fragment
         def download_button_two():
             st.download_button(
                 label="Télécharger au format CSV",
